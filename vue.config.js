@@ -39,10 +39,16 @@ module.exports = {
     // 配置代理跨域
     proxy: {
       '/dev-api': {
-        target: 'http://39.98.123.211:8170',
+        target: 'http://gmall-h5-api.atguigu.cn',
         pathRewrite: { '^/dev-api': '' },
       },
-    }
+    },
+    // proxy: {
+    //   '/dev-api/admin/product': {
+    //     target: 'http://39.98.123.211:8510',
+    //     pathRewrite: { '^/dev-api/admin/product': '' },
+    //   },
+    // },
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
