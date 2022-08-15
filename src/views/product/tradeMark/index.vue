@@ -26,6 +26,7 @@
       </el-table-column>
       <el-table-column prop="logoUrl" label="品牌LOGO" width="width">
         <template slot-scope="{ row, $index }">
+          <!-- row为数组中相应的每一个元素，即相应的平台属性 -->
           <img :src="row.logoUrl" alt="" style="width: 100px; height: 100px" />
         </template>
       </el-table-column>
