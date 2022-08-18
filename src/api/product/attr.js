@@ -22,15 +22,15 @@ export const reqAttrList = (category1Id,category2Id,category3Id)=>{
 // 添加属性与属性值接口POST /admin/product/saveAttrInfo
 export const reqAddAttr = (data)=> request({url:'/admin/product/saveAttrInfo',method:'post',data})
 // {
-//   "attrName": "string", 
-//   "attrValueList": [
+//   "attrName": "", 属性名
+//   "attrValueList": [ 属性名中属性值，因为属性值可以是多个，因此需要的是数组
 //     {
-//       "attrId": 0,
+//       "attrId": 0,   属性的id
 //       "id": 0,
-//       "valueName": "string"
+//       "valueName": "string"  属性值
 //     }
 //   ],
-//   "categoryId": 0,
-//   "categoryLevel": 0,
+//   "categoryId": 0, 携带category3id
+//   "categoryLevel": 0,  3
 //   "id": 0
 // }
