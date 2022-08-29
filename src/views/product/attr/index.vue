@@ -57,10 +57,13 @@
         </el-form>
         <el-button type="primary" icon="el-icon-plus">添加属性值</el-button>
         <el-button @click="isShowTable = true">取消</el-button>
-        <el-table style="width: 100%; margin: 20px 0px" border>
+        <el-table style="width: 100%; margin: 20px 0px" border :data="attrInfo.attrValueList">
           <el-table-column align="center" type="index" label="序号" width="80">
           </el-table-column>
           <el-table-column prop="prop" label="属性值名称" width="width">
+            <template slot-scope="{row,$index}">
+              <el-input v-model="row." placeholder="请输入属性名称"></el-input>
+            </template>
           </el-table-column>
           <el-table-column prop="prop" label="操作" width="width">
           </el-table-column>
@@ -91,7 +94,7 @@ export default {
           //属性名中属性值，因为属性值可以是多个，因此需要的是数组
         ],
         categoryId: 0, //携带category3id
-        categoryLevel: 3, //3
+        categoryLevel: 3, //3,因为服务器也需要区分几级id
       },
     };
   },
