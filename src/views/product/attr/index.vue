@@ -10,7 +10,7 @@
           icon="el-icon-plus"
           style="margin: 5px 0px"
           :disabled="!category3id"
-          @click="isShowTable = false"
+          @click="addAttr"
           >添加属性</el-button
         >
         <!-- 表格：展示平台属性 :data="data"-->
@@ -37,7 +37,7 @@
                 type="warning"
                 icon="el-icon-edit"
                 size="mini"
-                @click="isShowTable = false"
+                @click="updataAttr(row)"
               ></el-button>
               <el-button
                 type="danger"
@@ -55,17 +55,20 @@
             <el-input placeholder="请输入属性名"v-model="attrInfo.attrName"></el-input>
           </el-form-item>
         </el-form>
-        <el-button type="primary" icon="el-icon-plus">添加属性值</el-button>
+        <el-button type="primary" icon="el-icon-plus"@click="addAtteValue":disabled="!attrInfo.attrName">添加属性值</el-button>
         <el-button @click="isShowTable = true">取消</el-button>
         <el-table style="width: 100%; margin: 20px 0px" border :data="attrInfo.attrValueList">
           <el-table-column align="center" type="index" label="序号" width="80">
           </el-table-column>
           <el-table-column prop="prop" label="属性值名称" width="width">
             <template slot-scope="{row,$index}">
-              <el-input v-model="row." placeholder="请输入属性名称"></el-input>
+              <el-input v-model="row.valueName" placeholder="请输入属性值名称"size="mini"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="prop" label="操作" width="width">
+            <template slot-scope="{row,$index}">
+              <el-button type="danger"size="mini"icon="el-icon-delete"></el-button>
+            </template>
           </el-table-column>
         </el-table>
         <el-button type="primary">保存</el-button>
@@ -76,6 +79,8 @@
 </template>
 
 <script>
+// 按需引入lodash当中的深拷贝
+import cloneDeep from 'lodash/cloneDeep';
 export default {
   name: "Attr",
   data() {
@@ -92,6 +97,10 @@ export default {
         attrName: "", //属性名
         attrValueList: [
           //属性名中属性值，因为属性值可以是多个，因此需要的是数组
+          // {
+          //   attrId:0,//相应的属性名的id
+          //   valueName:''
+          // }
         ],
         categoryId: 0, //携带category3id
         categoryLevel: 3, //3,因为服务器也需要区分几级id
@@ -128,6 +137,44 @@ export default {
         this.attrList = reslut.data;
       }
     },
+    // 添加属性值回调
+    addAtteValue(){
+      // 向属性值的数组里面添加元素
+      this.attrInfo.attrValueList.push({
+        // attrId:是你相应的属性的id,目前而言我们是添加属性的操作，还没有相应的属性id，目前而言带给服务器的id为undefined
+      //  valueName:相应属性值名称
+       attrId:undefined,
+        valueName:''
+      })
+    },
+    // 添加属性的回调
+    addAttr(){
+      // 切换table显示与隐藏
+      this.isShowTable = false;
+      // 收集三级分类的id
+
+      // 清除数据
+      this.attrInfo = {
+        attrName: "", //属性名
+        attrValueList: [
+          //属性名中属性值，因为属性值可以是多个，因此需要的是数组
+          // {
+          //   attrId:0,//相应的属性名的id
+          //   valueName:''
+          // }
+        ],
+        categoryId:this.category3id, // 收集三级分类的id
+        categoryLevel: 3, //3,因为服务器也需要区分几级id
+      }
+    },
+    // 修改某一个属性
+    updataAttr(row){
+      this.isShowTable = false;
+      // 将选中的属性赋值给attrInfo
+      // 由于数据结构当中存在对象里面套数组，数组里面套对象，因此需要使用深拷贝解决这类问题
+      // 深拷贝，浅拷贝在面试的时候出现频率较高，要能手写
+      this.attrInfo = cloneDeep(row)
+    }
   },
 };
 </script>
