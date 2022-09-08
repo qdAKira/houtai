@@ -83,23 +83,31 @@
                 v-if="row.flag"
                 @blur="tolook(row)"
                 @keyup.native.enter="tolook(row)"
+                :ref="$index"
               ></el-input>
-              <span v-else @click="toEdit(row)" style="display: block">{{
-                row.valueName
-              }}</span>
+              <span
+                v-else
+                @click="toEdit(row, $index)"
+                style="display: block"
+                >{{ row.valueName }}</span
+              >
             </template>
           </el-table-column>
           <el-table-column prop="prop" label="操作" width="width">
-            <template slot-scope="{ row, $index }">
-              <el-button
+            <template slot-scope="scope">
+              <el-popconfirm :ref="scope.$index" :title="`确定删除${scope.row.valueName}`">
+                <el-button
                 type="danger"
                 size="mini"
                 icon="el-icon-delete"
+                scope="reference"
               ></el-button>
+              </el-popconfirm>
+              
             </template>
           </el-table-column>
         </el-table>
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary"@click="addOrUpdata">保存</el-button>
         <el-button @click="isShowTable = true">取消</el-button>
       </div>
     </el-card>
@@ -177,6 +185,10 @@ export default {
         // 当前flag属性,响应式数据(数据变化视图跟着变化)
         flag: true,
       });
+      // 新增属性值，自动聚焦
+      this.$nextTick(() => {
+        this.$refs[this.attrInfo.attrValueList.length - 1].focus();
+      });
     },
     // 添加属性按钮的回调
     addAttr() {
@@ -236,9 +248,42 @@ export default {
       row.flag = false;
     },
     // 点击span的回调，变为编辑模式
-    toEdit(row) {
+    toEdit(row, index) {
       row.flag = true;
+      // 获取input节点，实现自动聚焦
+      // 注意：点击span的时候，切换为input变为编辑模式，但是需要注意，对于浏览器而言，页面重绘与重排耗时间的
+      // 点击span的时候，重绘重排一个input它是需要耗费时间，因此我们不能一点击span立马获取到input
+      // $nextTick,当节点渲染完毕了，会执行一次
+      this.$nextTick(() => {
+        // 获取相应的input表单元素实现聚焦
+        this.$refs[index].focus();
+      });
     },
+    // 保存按钮：进行添加属性或者修改属性的操作
+    async addOrUpdata(){
+      // 整理参数：如果用户添加了很多属性值，且属性值为空的不应该提交给服务器
+      // 提交给服务器数据当中不应该出现flag字段
+      this.attrInfo.attrValueList = this.attrInfo.attrValueList.filter(item=>{
+        // 过滤掉属性值不是空的
+        if(item.valueName!=''){
+          // 删除掉flag属性
+          delete item.flag;
+          return true
+        }
+      })
+      // 发请求
+      try {
+       await this.$API.attr.reqAddAttr(this.attrInfo);
+      //  展示平台属性的消息进行切换
+        this.isShowTable = true;
+        // 提示消息框
+       this.$message({type:'success',message:'保存成功'});
+      //  保存成功以后需要再次获取平台属性进行展示
+      this.getAttrList();
+      } catch (error) {
+        
+      }
+    }
   },
 };
 </script>
