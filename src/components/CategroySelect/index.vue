@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- inline:代表的是行内表单，代表一行可以放置多个表单元素 -->
-    <el-form :inline="true" class="demo-form-inline":model="cForm">
+    <el-form :inline="true" class="demo-form-inline":model="cForm":disabled="show">
       <el-form-item label="一级分类">
         <el-select  placeholder="请选择"v-model="cForm.category1id"@change="handler1">
           <el-option :label="c1.name" :value="c1.id"v-for="(c1,index) in list1":key="c1.id"></el-option>
@@ -26,6 +26,7 @@
 <script>
 export default {
   name: "CategorySelect",
+  props:['show'],
   data() {
     return {
       // 一级分类的数据
