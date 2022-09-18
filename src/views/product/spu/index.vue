@@ -65,7 +65,7 @@ export default {
       limit:3, //每一页需要展示多少条数据
       records:[], //存储spu列表的数据
       total:0, //分页器一共需要展示数据的条数
-      scene:1, //0代表展示spu列表数据  1代表展示添加spu|修改spu结构  2代表展示添加sku结构
+      scene:0, //0代表展示spu列表数据  1代表展示添加spu|修改spu结构  2代表展示添加sku结构
 
     }
   },
