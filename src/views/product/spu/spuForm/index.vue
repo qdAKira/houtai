@@ -41,10 +41,10 @@
       </el-dialog>
     </el-form-item>
     <el-form-item label="销售属性">
-      <el-select :placeholder="`还有${unSelectSaleAttr.length}未选择`" v-model="attrId">
+      <el-select :placeholder="`还有${unSelectSaleAttr.length}未选择`" v-model="attrIdAndAttrName">
         <el-option :label="unselect.name" :value="`${unselect.id}:${unselect.name}`" v-for="(unselect,index) in unSelectSaleAttr" :key="unselect.id"></el-option>
       </el-select>
-      <el-button type="primary" icon="el-icon-plus" :disabled="!attrId">添加销售属性</el-button>
+      <el-button type="primary" icon="el-icon-plus" :disabled="!attrIdAndAttrName" @click="addSaleAttr">添加销售属性</el-button>
       <!-- 展示的是当前spu属于自己的销售属性 -->
       <el-table style="width: 100%" border :data="spu.spuSaleAttrList">
         <el-table-column type="index" label="序号" width="width" align="center">
@@ -138,7 +138,7 @@ export default {
       tradeMarkList: [], //存储品牌信息
       spuImageList: [], //存储spu图片的信息
       saleAttrList: [], //销售属性的数据
-      attrId:'', //收集未选择的销售属性id
+      attrIdAndAttrName:'', //收集未选择的销售属性id
     };
   },
   methods: {
@@ -194,6 +194,16 @@ export default {
     // 照片墙图片上传成功的回调
     handleSuccess(response, file, fileList){
       this.spuImageList = fileList
+    },
+    // 添加新的销售属性
+    addSaleAttr(){
+      // 已经收集需要添加的销售属性的信息
+      // 把收集到的销售属性的数据进行分割
+      const [baseSaleAttrId,saleAttrName] = this.attrIdAndAttrName.split(':');
+      // 向spu对象spuSaleAttrList属性里面添加新的销售属性
+      let newSaleAttr = {baseSaleAttrId,spuSaleAttrValueList:[],saleAttrName};
+      // 添加新的销售属性
+      this.spu.spuSaleAttrList.push(newSaleAttr)
     }
   },
   computed:{
