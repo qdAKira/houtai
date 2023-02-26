@@ -2,6 +2,7 @@
   <div>
     <Card></Card>
     <Sale></Sale>
+    <Observe></Observe>
   </div>
 </template>
 
@@ -9,11 +10,13 @@
 
 import Card from './Card'
 import Sale from './Sale'
+import Observe from './Observe'
 export default {
   name: '',
   components:{
     Card,
-    Sale
+    Sale,
+    Observe
   }
 }
 </script>

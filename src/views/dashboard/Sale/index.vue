@@ -4,23 +4,25 @@
       <div slot="header" class="clearfix">
         <!-- 头部左侧内容 -->
         <el-tabs v-model="activeName" class="tab">
-          <el-tab-pane label="销售额" name="first" @click="changeFirst"></el-tab-pane>
+          <el-tab-pane label="销售额" name="first"></el-tab-pane>
           <el-tab-pane label="访问量" name="second"></el-tab-pane>
         </el-tabs>
         <!-- 头部右侧内容 -->
         <div class="right">
-          <span>今日</span>
-          <span>本周</span>
-          <span>本月</span>
-          <span>本年</span>
+          <span @click="setDay">今日</span>
+          <span @click="setWeek">本周</span>
+          <span @click="setMonth">本月</span>
+          <span @click="setYear">本年</span>
           <!-- 日期选择 v-model="value1"-->
           <el-date-picker
+            v-model="date"
             class="date"
             type="daterange"
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             size="mini"
+            value-format="yyyy-MM-dd"
           >
           </el-date-picker>
         </div>
@@ -59,16 +61,40 @@
 <script>
 // 引入echarts
 import echarts from "echarts";
+// 引入dayjs(用于获取日期)
+import dayjs from 'dayjs';
 export default {
   name: "Sale",
   data() {
     return {
       activeName: "first",
+      // 收集日历数据
+      date:[]
     };
   },
   methods: {
-   changeFirst(){
-
+    // 本日
+   setDay(){
+    const day = dayjs().format('YYYY-MM-DD')
+    this.date = [day,day];
+   },
+  //  本周
+   setWeek(){
+    const start = dayjs().day(1).format('YYYY-MM-DD');
+    const end = dayjs().day(7).format('YYYY-MM-DD');
+    this.date = [start,end]
+   },
+  //  本月
+   setMonth(){
+    const start = dayjs().startOf('month').format('YYYY-MM-DD')
+    const end = dayjs().endOf('month').format('YYYY-MM-DD')
+    this.date = [start,end]
+   },
+  //  本年
+   setYear(){
+    const start = dayjs().startOf('year').format('YYYY-MM-DD')
+    const end = dayjs().endOf('year').format('YYYY-MM-DD')
+    this.date = [start,end]
    }
   },
   mounted() {
@@ -153,7 +179,7 @@ export default {
   right: 0px;
 }
 .date {
-  width: 200px;
+  width: 250px;
   margin: 0px 20px;
 }
 .right span {

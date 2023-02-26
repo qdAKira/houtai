@@ -2,4 +2,5 @@ build/*.js
 src/assets
 public
 dist
+# 去除严格模式，代码格式检查
 src/*
